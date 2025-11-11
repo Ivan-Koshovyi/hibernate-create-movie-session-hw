@@ -40,6 +40,8 @@ public class CinemaHallDaoImpl implements CinemaHallDao {
     public CinemaHall get(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.find(CinemaHall.class, id);
+        } catch (Exception e) {
+            throw new DataProcessingException("Can't get cinema hall for id: " + id, e);
         }
     }
 
@@ -48,6 +50,8 @@ public class CinemaHallDaoImpl implements CinemaHallDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<CinemaHall> fromCinemaHall = session.createQuery("From CinemaHall", CinemaHall.class);
             return fromCinemaHall.getResultList();
+        } catch (Exception e) {
+            throw new DataProcessingException("Can't get all cinema hall", e);
         }
     }
 }

@@ -1,5 +1,8 @@
 package mate.academy.dao.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import mate.academy.dao.MovieSessionDao;
 import mate.academy.exception.DataProcessingException;
 import mate.academy.lib.Dao;
@@ -8,10 +11,6 @@ import mate.academy.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Dao
 public class MovieSessionDaoImpl implements MovieSessionDao {
@@ -28,7 +27,8 @@ public class MovieSessionDaoImpl implements MovieSessionDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't insert movie session " + movieSession, e);
+            throw new DataProcessingException("Can't insert "
+                    + "movie session " + movieSession, e);
         } finally {
             if (session != null) {
                 session.close();
@@ -42,7 +42,8 @@ public class MovieSessionDaoImpl implements MovieSessionDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.find(MovieSession.class, id);
         } catch (Exception e) {
-            throw new DataProcessingException("Can't get movie session for id: " + id, e);
+            throw new DataProcessingException("Can't get movie session "
+                    + "for id: " + id, e);
         }
     }
 
@@ -52,9 +53,9 @@ public class MovieSessionDaoImpl implements MovieSessionDao {
         LocalDateTime endOfDay = date.atTime(23, 59, 59);
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<MovieSession> query = session.createQuery(
-                    "FROM MovieSession ms " +
-                            "WHERE ms.movie.id = :id " +
-                            "AND ms.showTime BETWEEN :start AND :end",
+                    "FROM MovieSession ms "
+                            + "WHERE ms.movie.id = :id "
+                            + "AND ms.showTime BETWEEN :start AND :end",
                     MovieSession.class
             );
             query.setParameter("id", movieId);
@@ -62,7 +63,8 @@ public class MovieSessionDaoImpl implements MovieSessionDao {
             query.setParameter("end", endOfDay);
             return query.getResultList();
         } catch (Exception e) {
-            throw new DataProcessingException("Can't get all available sessions for date: " + date, e);
+            throw new DataProcessingException("Can't get all available "
+                    + "sessions for date: " + date, e);
         }
     }
 }

@@ -1,5 +1,6 @@
 package mate.academy.dao.impl;
 
+import java.util.List;
 import mate.academy.dao.CinemaHallDao;
 import mate.academy.exception.DataProcessingException;
 import mate.academy.lib.Dao;
@@ -8,8 +9,6 @@ import mate.academy.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-
-import java.util.List;
 
 @Dao
 public class CinemaHallDaoImpl implements CinemaHallDao {
@@ -27,7 +26,8 @@ public class CinemaHallDaoImpl implements CinemaHallDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't insert cinema hall " + cinemaHall, e);
+            throw new DataProcessingException("Can't insert cinema hall "
+                    + cinemaHall, e);
         } finally {
             if (session != null) {
                 session.close();
@@ -41,14 +41,16 @@ public class CinemaHallDaoImpl implements CinemaHallDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.find(CinemaHall.class, id);
         } catch (Exception e) {
-            throw new DataProcessingException("Can't get cinema hall for id: " + id, e);
+            throw new DataProcessingException("Can't get cinema hall "
+                    + "for id: " + id, e);
         }
     }
 
     @Override
     public List<CinemaHall> getAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<CinemaHall> fromCinemaHall = session.createQuery("From CinemaHall", CinemaHall.class);
+            Query<CinemaHall> fromCinemaHall = session
+                    .createQuery("From CinemaHall", CinemaHall.class);
             return fromCinemaHall.getResultList();
         } catch (Exception e) {
             throw new DataProcessingException("Can't get all cinema hall", e);
